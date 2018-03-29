@@ -9,12 +9,19 @@
 namespace AppBundle\Model;
 
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\JsonSerializationVisitor;
 
 /**
  * Class User
  * @package AppBundle\Model
  *
  * @Serializer\ExclusionPolicy("ALL")
+ *
+ * @Serializer\VirtualProperty(
+ *     "full_name",
+ *     exp="object.getPrintableName()"
+ * )
+ *
  */
 class User
 {
@@ -22,12 +29,37 @@ class User
      * @var string
      *
      * @Serializer\Expose
+     * @Serializer\Type("string")
      */
     protected $login;
 
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     * @Serializer\Expose
+     */
     protected $firstName;
 
     protected $lastName;
+
+    /**
+     * @var PreferenceCollection
+     *
+     * @Serializer\Expose
+     * @Serializer\Since("1.5.0")
+     */
+    protected $preferences;
+
+    protected $passwordHash;
+
+    /**
+     * @Serializer\Expose
+     *
+     * @var array
+     */
+    protected $baskets = [];
+
 
     /**
      * @return mixed
@@ -54,6 +86,14 @@ class User
     }
 
     /**
+     * @return string
+     */
+    public function getPrintableName()
+    {
+        return $this->firstName . ' ' . $this->lastName . ' (' . $this->login . ')';
+    }
+
+    /**
      * @param mixed $firstName
      */
     public function setFirstName($firstName)
@@ -77,6 +117,29 @@ class User
         $this->lastName = $lastName;
     }
 
+    /**
+     * @param PreferenceCollection $preferences
+     */
+    public function setPreferences(PreferenceCollection $preferences)
+    {
+        $this->preferences = $preferences;
+    }
 
+    /**
+     * @return PreferenceCollection
+     */
+    public function getPreferences()
+    {
+        return $this->preferences;
+    }
 
+    public function getBaskets()
+    {
+        return $this->baskets;
+    }
+
+    public function addBasket(Basket $basket)
+    {
+        $this->baskets[] = $basket;
+    }
 }
