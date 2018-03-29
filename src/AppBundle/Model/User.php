@@ -25,8 +25,6 @@ use JMS\Serializer\JsonSerializationVisitor;
  */
 class User
 {
-    protected $id;
-
     /**
      * @var string
      *
