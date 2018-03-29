@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppBundle\Controller;
 
 use AppBundle\Model\Basket;
@@ -28,13 +30,13 @@ class DefaultController extends Controller
      *
      * @param Request $request
      */
-    public function getUserAction(Request $request)
+    public function getUserAction(Request $request, string $userLogin)
     {
         $contextFactory = $this->getContextFactory();
         $serializationContext = $contextFactory->createSerializationContext();
 
         $user = new User();
-        $user->setLogin('test');
+        $user->setLogin($userLogin);
         $user->setFirstName('guigui');
         $user->setLastName('boy');
 
@@ -65,7 +67,7 @@ class DefaultController extends Controller
 
         $input = $request->getContent();
 
-        $content = $this->container->get('jms_serializer')->deserialize($input, User::class, 'json', $deserializationContext);
+        $this->container->get('jms_serializer')->deserialize($input, User::class, 'json', $deserializationContext);
 
         return new JsonResponse(['status' => 'OK']);
     }
