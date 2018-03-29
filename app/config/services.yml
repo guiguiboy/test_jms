@@ -41,3 +41,7 @@ services:
     AppBundle\Serializer\CustomEventSubscriber:
         tags:
             - { name: jms_serializer.event_subscriber }
+
+    AppBundle\Rest\Client:
+        arguments: ['%rest_api_host%']
+        public: true
